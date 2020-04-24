@@ -12,6 +12,16 @@ const circleSchema = new mongoose.Schema({
   },
 });
 
+const noticeSchema = new mongoose.Schema({
+  content: { 
+    type: String,
+  },
+  date: {
+    type: String,
+  },
+});
+
+
 const teamSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -19,7 +29,7 @@ const teamSchema = new mongoose.Schema({
   },
   members: [{ 
     type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User' 
+    ref: 'User',
   }],
   formation: [circleSchema],
   forum: [{
@@ -31,21 +41,9 @@ const teamSchema = new mongoose.Schema({
     ref: 'Month',
     required: true,
   }],
-  notice:[{
+  notices: [noticeSchema],
+  admin: { 
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Notice',
-  }],
-  location: [],
-  image: {
-    type: String,
-    required: true,
-  },
-  time: {
-    type: String,
-  },
-  description: {
-    type: String,
-    default: '',
   }
 });
 

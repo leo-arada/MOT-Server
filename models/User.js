@@ -4,16 +4,15 @@ const userSchema = new mongoose.Schema({
   name: { 
     type: String,
   },
-  isAdmin: {
-    type: Boolean,
-    default: false,
-  },
   email: {
     type: String,
   },
-  team: {
+  teams: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Team',
+  }],
+  password: {
+    type: String,
   }
 });
 
