@@ -1,8 +1,7 @@
 const createError = require('http-errors');
 const User = require('../../models/User');
 const Team = require('../../models/Team');
-const Notice = require('../../models/Notice');
-
+const utils = require('../../lib/utils');
 
 exports.addTeam = async (req, res, next) => {
   try {
@@ -42,5 +41,43 @@ exports.addNotice = async (req, res, next) => {
     res.json({ result: 'ok' });
   } catch(e) {
     next(createError(500));
+  }
+};
+
+exports.sendNoticeData = async (req, res, next) => {
+  try {
+    const { team_id } = req.params;
+    const team = await Team.findById({ _id: team_id }).populate('members');
+    res.json({ result: 'ok' , members: team.members });
+  } catch(error) {
+    next(createError(500));
+  }
+};
+
+exports.sendTeamInvitation = async (req,res, next) => {
+  try {
+    const { email, teamname, id, token } = req.body;
+    const VERIFY_URL = `http://localhost:3000/teams/${id}/join/${token}`;
+    const mail = {
+      to : `${email}`,
+      from : "leodkwkej@gmail.com",
+      subject: `${teamname} Team Invitation`,
+      html: 
+      `<div style="width:100%; height:200px; margin:auto;">
+       <div style="width:60%; height:100%; background-color:#EAF4F4; margin-left: auto; margin-right: auto">
+       <h2 style="text-align: center; margin:20px; padding-top: 20px;">${teamname}팀에 초대되셨습니다.</h2>
+       <div style="width:60%; height:50%; margin-left: auto; margin-right: auto; background-color:white;">
+       <h3 style="text-align: center;">팀 가입을 위해 아래 링크를 눌러주세요</h3>
+       <p style="display:flex; align-items:center;">
+       <a href="${VERIFY_URL}" style="text-decoration: none; ">해당 링크는 24시간 뒤에 만료됩니다.</a>
+       </p>
+       </div>
+       </div>
+      </div>`
+    };
+
+    await utils.mailer.sendMail(mail);
+  } catch(e) {
+
   }
 };
