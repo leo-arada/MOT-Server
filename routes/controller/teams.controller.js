@@ -102,8 +102,8 @@ exports.sendJoinResponse = async (req, res, next) => {
     const team = await Team.findById({ _id: team_id });
     team.members.push(user._id);
     await team.save();
-    res.json({ result: 'ok' });
+    res.json({ result: 'ok', user });
   } catch (e) {
     next(createError(500));
-  }
+  } 
 };
