@@ -1,15 +1,18 @@
 const mongoose = require('mongoose');
 
 const circleSchema = new mongoose.Schema({
-  x: {
+  innerText: {
     type: String,
   },
-  y: {
+  marginLeft: {
     type: String,
   },
-  writer: {
-    type: mongoose.Schema.Types.ObjectId,
+  marginTop: {
+    type: String,
   },
+  // writer: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  // },
 });
 
 const noticeSchema = new mongoose.Schema({

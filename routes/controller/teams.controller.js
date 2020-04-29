@@ -50,7 +50,6 @@ exports.sendMembersData = async (req, res, next) => {
   try {
     const { team_id } = req.params;
     const team = await Team.findById({ _id: team_id }).populate('members');
-
     res.json({ result: 'ok', members: team.members });
   } catch (error) {
     next(createError(500));
@@ -106,4 +105,30 @@ exports.sendJoinResponse = async (req, res, next) => {
   } catch (e) {
     next(createError(500));
   } 
+};
+
+exports.saveFormationData = async (req, res, next) => {
+  try {
+    const { team_id } = req.params;
+    const team = await Team.findByIdAndUpdate(
+      { _id: team_id }, 
+      { formation: [] }, 
+      { new: true },
+    );
+    req.body.forEach((circle) => team.formation.push(circle));
+    await team.save();
+    res.json({ result: 'ok' });
+  } catch (error) {
+    next(createError(500));
+  }
+};
+
+exports.sendFormationdat = async (req, res, next) => {
+  try {
+    const { team_id } = req.params;
+    const team = await Team.findById({ _id: team_id });
+    res.json({ result: 'ok', formation: team.formation });
+  } catch (error) {
+    next(createError(500));
+  }
 };

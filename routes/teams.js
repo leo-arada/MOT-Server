@@ -5,6 +5,8 @@ const teamsController = require('./controller/teams.controller');
 
 router.get('/myteam/:team_id', verifyToken,  teamsController.sendTeamData);
 router.get('/myteam/:team_id/members', verifyToken, teamsController.sendMembersData);
+router.get('/myteam/:team_id/formation', verifyToken, teamsController.sendFormationdat);
+router.post('/myteam/:team_id/formation', verifyToken, teamsController.saveFormationData);
 router.post('/newteam', verifyToken, teamsController.addTeam);
 router.post('/myteam/:team_id/notice', verifyToken, teamsController.addNotice);
 router.post('/:team_id/invitation', verifyToken, teamsController.sendTeamInvitation);
