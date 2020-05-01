@@ -2,6 +2,7 @@ const createError = require('http-errors');
 const User = require('../../models/User');
 const Team = require('../../models/Team');
 const Token = require('../../models/Token');
+const Post = require('../../models/Post');
 const utils = require('../../lib/utils');
 const jwt = require('jsonwebtoken');
 
@@ -27,7 +28,9 @@ exports.addTeam = async (req, res, next) => {
 exports.sendTeamData = async (req, res, next) => {
   try {
     const { team_id } = req.params;
-    const team = await Team.findById({ _id: team_id }).populate('members');
+    const team = await Team.findById({ _id: team_id })
+      .populate('members')
+      .populate('forum');
     res.json({ result: 'ok', team });
   } catch (error) {
     next(createError(500));
@@ -123,11 +126,93 @@ exports.saveFormationData = async (req, res, next) => {
   }
 };
 
-exports.sendFormationdat = async (req, res, next) => {
+exports.sendFormationdata = async (req, res, next) => {
   try {
     const { team_id } = req.params;
     const team = await Team.findById({ _id: team_id });
     res.json({ result: 'ok', formation: team.formation });
+  } catch (error) {
+    next(createError(500));
+  }
+};
+
+exports.addNewPost = async (req, res, next) => {
+  try {
+    const { teamId } = req.body;
+    const { content, date, poster, name } = req.body.post;
+    const newPost = await new Post({
+      name,
+      content,
+      date,
+      poster,
+    }).save();
+    const team = await Team.findById({ _id: teamId });
+    team.forum.push(newPost._id);
+    await team.save();
+    res.json({ result: 'ok', newPost });
+  } catch (error) {
+    next(createError(500));
+  }
+};
+
+exports.sendPostData = async (req, res, next) => {
+  try {
+    const { team_id } = req.params;
+    const team = await Team.findById({ _id: team_id }).populate('forum');
+    res.json({ result: 'ok', forum: team.forum });
+  } catch (error) {
+    next(createError(500));
+  }
+};
+
+exports.responseLikeRequest = async (req, res, next) => {
+  try {
+    const { post_id } = req.params;
+    const { userId } = req.body;
+    let post = await Post.findById({ _id: post_id });
+    const isLIkedPost = post.likes.find((id) => id.toString() === userId);
+
+    if (isLIkedPost) {
+      const newLikes = post.likes.filter((id) => id.toString() !== userId);
+      const newPost = await Post.findByIdAndUpdate(
+        { _id: post_id },
+        { likes: newLikes},
+        { new: true }
+      );
+      return res.json({ result: 'ok', likes: newPost.likes });
+    }
+
+    post.likes.push(userId);
+    await post.save();
+    res.json({ result: 'ok', likes: post.likes });
+  } catch (error) {
+    next(createError(500));
+  }
+};
+
+exports.modifyPost = async (req, res, next) => {
+  try {
+    const { post_id } = req.params;
+    const { content } = req.body;
+    await Post.findByIdAndUpdate(
+      { _id: post_id }, 
+      { content } , 
+      { new: true }
+    );
+    res.json({ result: 'ok' });
+  } catch (error) {
+    next(createError(500));
+  }
+};
+
+exports.deletePost = async (req, res, next) => {
+  try {
+    const { post_id, team_id } = req.params;
+    await Post.findByIdAndDelete({ _id: post_id });
+    const team = await Team.findById({ _id: team_id });
+    team.forum.filter((id) => id.toString() !== post_id);
+    await team.save();
+    res.json({ result: 'ok' });
   } catch (error) {
     next(createError(500));
   }
