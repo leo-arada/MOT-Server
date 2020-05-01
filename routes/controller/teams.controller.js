@@ -3,6 +3,7 @@ const User = require('../../models/User');
 const Team = require('../../models/Team');
 const Token = require('../../models/Token');
 const Post = require('../../models/Post');
+const Comment = require('../../models/Comment');
 const utils = require('../../lib/utils');
 const jwt = require('jsonwebtoken');
 
@@ -159,10 +160,12 @@ exports.sendPostData = async (req, res, next) => {
   try {
     const { team_id } = req.params;
     const team = await Team.findById({ _id: team_id }).populate('forum');
-    res.json({ result: 'ok', forum: team.forum });
+    const comments = await Comment.find({});
+
+    res.json({ result: 'ok', forum: team.forum, comments });
   } catch (error) {
     next(createError(500));
-  }
+  }``
 };
 
 exports.responseLikeRequest = async (req, res, next) => {
@@ -208,10 +211,53 @@ exports.modifyPost = async (req, res, next) => {
 exports.deletePost = async (req, res, next) => {
   try {
     const { post_id, team_id } = req.params;
+    
     await Post.findByIdAndDelete({ _id: post_id });
-    const team = await Team.findById({ _id: team_id });
-    team.forum.filter((id) => id.toString() !== post_id);
-    await team.save();
+    await Comment.deleteMany({ postId:post_id });
+    await Team.findByIdAndUpdate(
+      { _id: team_id },
+      { $pull: { forum: {$in: [post_id] }}},
+      { new: true }
+    );
+
+    res.json({ result: 'ok' });
+  } catch (error) {
+    console.log(error)
+    next(createError(500));
+  }
+};
+
+exports.addComment = async (req, res, next) => {
+  try {
+    const { content, postId, name, userId } = req.body;
+
+    const comment = await new Comment({
+      content,
+      name,
+      postId,
+      writer: userId
+    }).save();
+   
+    const post = await Post.findById({ _id: postId });
+    post.comments.push(comment._id)
+    await post.save();
+    // console.log(comment);
+    // console.log(post)
+    res.json({ result: 'ok', comment });
+  } catch (error) {
+    next(createError(500));
+  }
+};
+
+exports.deleteComment = async (req, res, next) => {
+  try {
+    const { post_id, comment_id } = req.params;
+    await Comment.findOneAndDelete({ _id: comment_id });
+    await Post.findByIdAndUpdate(
+      { _id: post_id },
+      { $pull: { comments: {$in: [comment_id] }}},
+      { new: true },
+    );
     res.json({ result: 'ok' });
   } catch (error) {
     next(createError(500));
