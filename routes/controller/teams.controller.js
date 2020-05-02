@@ -4,7 +4,6 @@ const Team = require('../../models/Team');
 const Token = require('../../models/Token');
 const Post = require('../../models/Post');
 const Comment = require('../../models/Comment');
-const Match = require('../../models/Match');
 const utils = require('../../lib/utils');
 const jwt = require('jsonwebtoken');
 

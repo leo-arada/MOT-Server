@@ -10,9 +10,6 @@ const circleSchema = new mongoose.Schema({
   marginTop: {
     type: String,
   },
-  // writer: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  // },
 });
 
 const noticeSchema = new mongoose.Schema({
@@ -36,7 +33,6 @@ const matchSchema = new mongoose.Schema({
   },
   location: [],
 });
-
 
 const teamSchema = new mongoose.Schema({
   name: {
