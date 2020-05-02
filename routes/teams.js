@@ -18,5 +18,6 @@ router.post('/:team_id/invitation', verifyToken, teamsController.sendTeamInvitat
 router.post('/:team:id/join/:token', verifyInvitationToken, teamsController.sendJoinResponse);
 router.post('/posts/:post_id/comment', verifyToken, teamsController.addComment);
 router.delete('/posts/:post_id/comment/:comment_id', verifyToken, teamsController.deleteComment);
+router.post('/:team_id/match', verifyToken, teamsController.saveMatch);
 
-module.exports = router;
+module.exports = router;  

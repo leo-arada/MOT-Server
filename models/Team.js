@@ -24,6 +24,19 @@ const noticeSchema = new mongoose.Schema({
   },
 });
 
+const matchSchema = new mongoose.Schema({
+  date: { 
+    type: String,
+  },
+  time: {
+    type: String
+  },
+  opponent: { 
+    type: String,
+  },
+  location: [],
+});
+
 
 const teamSchema = new mongoose.Schema({
   name: {
@@ -47,7 +60,8 @@ const teamSchema = new mongoose.Schema({
   notices: [noticeSchema],
   admin: { 
     type: mongoose.Schema.Types.ObjectId,
-  }
+  },
+  match: [matchSchema],
 });
 
 module.exports = mongoose.model('Team', teamSchema);

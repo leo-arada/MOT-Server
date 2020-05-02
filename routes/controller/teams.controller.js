@@ -4,6 +4,7 @@ const Team = require('../../models/Team');
 const Token = require('../../models/Token');
 const Post = require('../../models/Post');
 const Comment = require('../../models/Comment');
+const Match = require('../../models/Match');
 const utils = require('../../lib/utils');
 const jwt = require('jsonwebtoken');
 
@@ -22,6 +23,7 @@ exports.addTeam = async (req, res, next) => {
     await user.save();
     res.json({ result: 'ok', team });
   } catch (error) {
+    console.log(error)
     next(createError(500));
   }
 };
@@ -241,8 +243,6 @@ exports.addComment = async (req, res, next) => {
     const post = await Post.findById({ _id: postId });
     post.comments.push(comment._id)
     await post.save();
-    // console.log(comment);
-    // console.log(post)
     res.json({ result: 'ok', comment });
   } catch (error) {
     next(createError(500));
@@ -260,6 +260,20 @@ exports.deleteComment = async (req, res, next) => {
     );
     res.json({ result: 'ok' });
   } catch (error) {
+    next(createError(500));
+  }
+};
+
+exports.saveMatch = async (req, res, next) => {
+  try {
+    const { team_id } = req.params;
+    await Team.findByIdAndUpdate(
+      { _id: team_id }, 
+      { match: [req.body] }, 
+      { new: true }
+    );
+    res.json({ result: 'ok' });
+  } catch (error ) {
     next(createError(500));
   }
 };

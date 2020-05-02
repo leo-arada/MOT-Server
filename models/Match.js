@@ -2,14 +2,15 @@ const mongoose = require('mongoose');
 
 const matchSchema = new mongoose.Schema({
   date: { 
-    type: Date,
+    type: String,
+  },
+  time: {
+    type: String
   },
   opponent: { 
     type: String,
   },
-  location: {
-    type: String,
-  }, 
+  location: [],
 });
 
 module.exports = mongoose.model('Match', matchSchema);
