@@ -18,6 +18,8 @@ router.post('/:team_id/invitation', verifyToken, teamsController.sendTeamInvitat
 router.post('/:team:id/join/:token', verifyInvitationToken, teamsController.sendJoinResponse);
 router.post('/posts/:post_id/comment', verifyToken, teamsController.addComment);
 router.delete('/posts/:post_id/comment/:comment_id', verifyToken, teamsController.deleteComment);
+router.get('/:team_id/match', verifyToken, teamsController.sendMatchData);
 router.post('/:team_id/match', verifyToken, teamsController.saveMatch);
+router.post('/:team_id/finance', verifyToken, teamsController.addFinance);
 
 module.exports = router;  

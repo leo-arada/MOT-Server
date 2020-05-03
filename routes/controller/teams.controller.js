@@ -4,6 +4,7 @@ const Team = require('../../models/Team');
 const Token = require('../../models/Token');
 const Post = require('../../models/Post');
 const Comment = require('../../models/Comment');
+const Finance = require('../../models/Finance');
 const utils = require('../../lib/utils');
 const jwt = require('jsonwebtoken');
 
@@ -32,7 +33,8 @@ exports.sendTeamData = async (req, res, next) => {
     const { team_id } = req.params;
     const team = await Team.findById({ _id: team_id })
       .populate('members')
-      .populate('forum');
+      .populate('forum')
+      .populate('finances');
     res.json({ result: 'ok', team });
   } catch (error) {
     next(createError(500));
@@ -263,6 +265,16 @@ exports.deleteComment = async (req, res, next) => {
   }
 };
 
+exports.sendMatchData = async (req, res, next) => {
+  try {
+    const { team_id } = req.params;
+    const team = await Team.findById({ _id: team_id });
+    res.json({ result: 'ok', match: team.match });
+  } catch (error) {
+    next(createError(500));
+  }
+};
+
 exports.saveMatch = async (req, res, next) => {
   try {
     const { team_id } = req.params;
@@ -273,6 +285,21 @@ exports.saveMatch = async (req, res, next) => {
     );
     res.json({ result: 'ok' });
   } catch (error ) {
+    next(createError(500));
+  }
+};
+
+exports.addFinance = async (req, res, next) => {
+  try {
+    const { team_id } = req.params;
+    const finance = await new Finance(req.body).save();
+    const team = await Team.findByIdAndUpdate(
+      { _id: team_id},
+      { $push: { finances: finance }},
+      { new: true }
+    );
+    res.json({ result: 'ok', newFinance: finance });
+  } catch (error ){
     next(createError(500));
   }
 };

@@ -48,10 +48,9 @@ const teamSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Post',
   }],
-  finance: [{
+  finances: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Month',
-    required: true,
+    ref: 'Finance',
   }],
   notices: [noticeSchema],
   admin: { 
