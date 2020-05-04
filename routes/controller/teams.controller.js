@@ -12,7 +12,7 @@ exports.addTeam = async (req, res, next) => {
   try {
     const { teamName, email } = req.body;
     let team = await Team.findOne({ name: teamName });
-    if (team) return res.json({ result: 'duplicated' });
+    if (team) return next(createError(409));
     const user = await User.findOne({ email });
     team = await new Team({
       name: teamName,
@@ -23,7 +23,6 @@ exports.addTeam = async (req, res, next) => {
     await user.save();
     res.json({ result: 'ok', team });
   } catch (error) {
-    console.log(error)
     next(createError(500));
   }
 };
@@ -48,7 +47,7 @@ exports.addNotice = async (req, res, next) => {
     team.notices.push(notice);
     await team.save();
     res.json({ result: 'ok' });
-  } catch (e) {
+  } catch (error) {
     next(createError(500));
   }
 };
@@ -202,7 +201,7 @@ exports.modifyPost = async (req, res, next) => {
     const { content } = req.body;
     await Post.findByIdAndUpdate(
       { _id: post_id }, 
-      { content } , 
+      { content }, 
       { new: true }
     );
     res.json({ result: 'ok' });
@@ -233,7 +232,6 @@ exports.deletePost = async (req, res, next) => {
 exports.addComment = async (req, res, next) => {
   try {
     const { content, postId, name, userId } = req.body;
-
     const comment = await new Comment({
       content,
       name,
@@ -242,7 +240,7 @@ exports.addComment = async (req, res, next) => {
     }).save();
    
     const post = await Post.findById({ _id: postId });
-    post.comments.push(comment._id)
+    post.comments.push(comment._id);
     await post.save();
     res.json({ result: 'ok', comment });
   } catch (error) {
@@ -293,13 +291,28 @@ exports.addFinance = async (req, res, next) => {
   try {
     const { team_id } = req.params;
     const finance = await new Finance(req.body).save();
-    const team = await Team.findByIdAndUpdate(
-      { _id: team_id},
+    await Team.findByIdAndUpdate(
+      { _id: team_id },
       { $push: { finances: finance }},
       { new: true }
     );
     res.json({ result: 'ok', newFinance: finance });
   } catch (error ){
+    next(createError(500));
+  }
+};
+
+exports.deleteFinance = async (req, res, next) => {
+  try {
+    const { team_id, finance_id } = req.params;
+    await Finance.findByIdAndDelete({ _id: finance_id });
+    await Team.findByIdAndUpdate(
+      { _id: team_id },
+      { $pull: { finances: {$in: [finance_id] } }},
+      { new: true }
+    );
+    res.json({ result: 'ok' });
+  } catch (error) {
     next(createError(500));
   }
 };

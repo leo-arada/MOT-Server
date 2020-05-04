@@ -21,5 +21,6 @@ router.delete('/posts/:post_id/comment/:comment_id', verifyToken, teamsControlle
 router.get('/:team_id/match', verifyToken, teamsController.sendMatchData);
 router.post('/:team_id/match', verifyToken, teamsController.saveMatch);
 router.post('/:team_id/finance', verifyToken, teamsController.addFinance);
+router.delete('/:team_id/finance/:finance_id', verifyToken, teamsController.deleteFinance);
 
 module.exports = router;  
