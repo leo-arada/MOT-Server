@@ -3,14 +3,19 @@ const createError = require('http-errors');
 const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
 const authRouter = require('./routes/auth');
 const teamsRouter = require('./routes/teams');
-const cors = require('cors')
+const cors = require('cors');
 
 mongoose.connect(
   process.env.DB_URI, 
-  { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true }, 
+  { 
+    useNewUrlParser: true, 
+    useUnifiedTopology: true, 
+    useFindAndModify: false, 
+    useCreateIndex: true,
+  }, 
   () => {
     console.log('connected to mongodb');
   }
@@ -19,14 +24,14 @@ mongoose.connect(
 const app = express();
 
 app.use(cors());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use(
   session({
     secret: process.env.SECRET,
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true,
   })
 );
 

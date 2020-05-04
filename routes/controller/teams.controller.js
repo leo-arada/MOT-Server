@@ -163,7 +163,6 @@ exports.sendPostData = async (req, res, next) => {
     const { team_id } = req.params;
     const team = await Team.findById({ _id: team_id }).populate('forum');
     const comments = await Comment.find({});
-
     res.json({ result: 'ok', forum: team.forum, comments });
   } catch (error) {
     next(createError(500));
@@ -213,7 +212,6 @@ exports.modifyPost = async (req, res, next) => {
 exports.deletePost = async (req, res, next) => {
   try {
     const { post_id, team_id } = req.params;
-    
     await Post.findByIdAndDelete({ _id: post_id });
     await Comment.deleteMany({ postId:post_id });
     await Team.findByIdAndUpdate(
@@ -221,10 +219,8 @@ exports.deletePost = async (req, res, next) => {
       { $pull: { forum: {$in: [post_id] }}},
       { new: true }
     );
-
     res.json({ result: 'ok' });
   } catch (error) {
-    console.log(error)
     next(createError(500));
   }
 };
