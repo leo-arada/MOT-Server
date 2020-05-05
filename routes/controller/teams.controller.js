@@ -287,12 +287,12 @@ exports.addFinance = async (req, res, next) => {
   try {
     const { team_id } = req.params;
     const finance = await new Finance(req.body).save();
-    await Team.findByIdAndUpdate(
+    const team = await Team.findByIdAndUpdate(
       { _id: team_id },
       { $push: { finances: finance } },
       { new: true }
-    );
-    res.json({ result: 'ok', newFinance: finance });
+    ).populate('finances');
+    res.json({ result: 'ok', newFinances: team.finances });
   } catch (error){
     next(createError(500));
   }
