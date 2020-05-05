@@ -13,7 +13,7 @@ const circleSchema = new mongoose.Schema({
 });
 
 const noticeSchema = new mongoose.Schema({
-  content: { 
+  content: {
     type: String,
   },
   date: {
@@ -22,13 +22,13 @@ const noticeSchema = new mongoose.Schema({
 });
 
 const matchSchema = new mongoose.Schema({
-  date: { 
+  date: {
     type: String,
   },
   time: {
-    type: String
+    type: String,
   },
-  opponent: { 
+  opponent: {
     type: String,
   },
   location: [],
@@ -39,21 +39,27 @@ const teamSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  members: [{ 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User',
-  }],
+  members: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
   formation: [circleSchema],
-  forum: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Post',
-  }],
-  finances: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Finance',
-  }],
+  forum: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Post',
+    },
+  ],
+  finances: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Finance',
+    },
+  ],
   notices: [noticeSchema],
-  admin: { 
+  admin: {
     type: mongoose.Schema.Types.ObjectId,
   },
   match: [matchSchema],

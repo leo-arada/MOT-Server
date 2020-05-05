@@ -180,7 +180,7 @@ exports.responseLikeRequest = async (req, res, next) => {
       const newLikes = post.likes.filter((id) => id.toString() !== userId);
       const newPost = await Post.findByIdAndUpdate(
         { _id: post_id },
-        { likes: newLikes},
+        { likes: newLikes },
         { new: true }
       );
       return res.json({ result: 'ok', likes: newPost.likes });
@@ -216,7 +216,7 @@ exports.deletePost = async (req, res, next) => {
     await Comment.deleteMany({ postId:post_id });
     await Team.findByIdAndUpdate(
       { _id: team_id },
-      { $pull: { forum: {$in: [post_id] }}},
+      { $pull: { forum: { $in: [post_id] } } },
       { new: true }
     );
     res.json({ result: 'ok' });
@@ -250,7 +250,7 @@ exports.deleteComment = async (req, res, next) => {
     await Comment.findOneAndDelete({ _id: comment_id });
     await Post.findByIdAndUpdate(
       { _id: post_id },
-      { $pull: { comments: {$in: [comment_id] }}},
+      { $pull: { comments: { $in: [comment_id] } } },
       { new: true },
     );
     res.json({ result: 'ok' });
@@ -289,11 +289,11 @@ exports.addFinance = async (req, res, next) => {
     const finance = await new Finance(req.body).save();
     await Team.findByIdAndUpdate(
       { _id: team_id },
-      { $push: { finances: finance }},
+      { $push: { finances: finance } },
       { new: true }
     );
     res.json({ result: 'ok', newFinance: finance });
-  } catch (error ){
+  } catch (error){
     next(createError(500));
   }
 };
@@ -304,7 +304,7 @@ exports.deleteFinance = async (req, res, next) => {
     await Finance.findByIdAndDelete({ _id: finance_id });
     await Team.findByIdAndUpdate(
       { _id: team_id },
-      { $pull: { finances: {$in: [finance_id] } }},
+      { $pull: { finances: { $in: [finance_id] } } },
       { new: true }
     );
     res.json({ result: 'ok' });
