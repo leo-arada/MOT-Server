@@ -166,7 +166,7 @@ exports.sendPostData = async (req, res, next) => {
     res.json({ result: 'ok', forum: team.forum, comments });
   } catch (error) {
     next(createError(500));
-  }``
+  }
 };
 
 exports.responseLikeRequest = async (req, res, next) => {

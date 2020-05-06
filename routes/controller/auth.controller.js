@@ -24,7 +24,6 @@ exports.logIn = async (req, res, next) => {
       user,
       token,
     });
-
   } catch (error) {
     next(createError(500));
   }
