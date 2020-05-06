@@ -1,7 +1,7 @@
 const createError = require('http-errors');
 const jwt = require('jsonwebtoken');
 const User = require('../../models/User');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 exports.logIn = async (req, res, next) => {
   try {
