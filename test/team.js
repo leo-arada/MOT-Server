@@ -592,7 +592,6 @@ describe('/:team_id/finance', function() {
       .send(data)
       .end(async (err, res) => {
         const { result, newFinances } = res.body;
-        console.log(result, newFinances)
         financeId = newFinances[0]._id;
         const team = await Team.findById({ _id: teamId });
         expect(team.finances[0]._id.toString()).to.equal(newFinances[0]._id.toString());
