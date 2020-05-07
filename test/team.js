@@ -576,6 +576,13 @@ describe('/:team_id/finance', function() {
       });
   });
 
+  after(async () => {
+    await Team.findByIdAndUpdate(
+      { _id: teamId }, 
+      { finances: [] }, 
+      { new: true }
+    );
+  });
 
   it('Should add a new finance', function(done) {
     this.timeout(10000);
@@ -584,13 +591,14 @@ describe('/:team_id/finance', function() {
       .set('Authorization', `Bearer ${accessToken}`)
       .send(data)
       .end(async (err, res) => {
-        const { result, newFinance } = res.body;
-        financeId = newFinance._id;
+        const { result, newFinances } = res.body;
+        console.log(result, newFinances)
+        financeId = newFinances[0]._id;
         const team = await Team.findById({ _id: teamId });
-        expect(team.finances[0].toString()).to.equal(newFinance._id.toString());
-        expect(newFinance.yearAndMonth).to.equal('2010-05');
-        expect(newFinance.income).to.equal('50000');
-        expect(newFinance.outcome).to.equal('50000');
+        expect(team.finances[0]._id.toString()).to.equal(newFinances[0]._id.toString());
+        expect(newFinances[0].yearAndMonth).to.equal('2010-05');
+        expect(newFinances[0].income).to.equal('50000');
+        expect(newFinances[0].outcome).to.equal('50000');
         expect(result).to.equal('ok');
         done();
       });
