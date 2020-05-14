@@ -14,7 +14,6 @@ jobs:
                 name: Show Current Branch
                 command: echo ${CIRCLE_BRANCH}
             - run: npm install
-            - run: npm test
             - run:
                 name: Installing deployment dependencies
                 command: |
