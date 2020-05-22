@@ -4,7 +4,7 @@
 
 MOT 는 축구나 풋살을 좋아하는 사람들을 위해 만들어진 웹 애플리케이션입니다. 축구팀을 쉽게 관리할 수 있게 도와주는 유용한 애플리케이션입니다.
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/8d2167a8-8096-45a9-81f2-1646911be651/MOT.gif](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/8d2167a8-8096-45a9-81f2-1646911be651/MOT.gif)
+![Farmers Market Finder Demo](demo/MOT.gif)
 
 ## Table of contents
 
@@ -32,7 +32,7 @@ MOT 는 축구나 풋살을 좋아하는 사람들을 위해 만들어진 웹 �
 - 노션을 통해서 개발 일정, 작업이 조율이 되었습니다.
 - MOT 프로젝트는 3주간의 기간을 통해 개발이 진행되었습니다.  아래와 같은 태스크카드를 만듦으로써, 작업의 효율성을 최대한 끌어올렸습니다. 최대한 그날그날 정해진 일정 안에 정해진 태스크를 완료하기 위해 많은 노력을 하였습니다.
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/9e611fbb-3c5b-4921-8a1a-2f16341bd4c0/_.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/9e611fbb-3c5b-4921-8a1a-2f16341bd4c0/_.png)
+![Farmers Market Finder Demo](demo/taskcard.png)
 
 ## Technologies
 
